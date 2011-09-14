@@ -1,0 +1,128 @@
+* {
+	margin: 0;
+}
+
+html {
+	background: white;
+	background: -moz-repeating-linear-gradient(-45deg, white, white 50px, black 50px, black 100px);
+	background: -ms-repeating-linear-gradient(-45deg, white, white 50px, black 50px, black 100px);
+	background: -o-repeating-linear-gradient(-45deg, white, white 50px, black 50px, black 100px);
+	background: -webkit-repeating-linear-gradient(-45deg, white, white 50px, black 50px, black 100px);
+	background: repeating-linear-gradient(-45deg, white, white 50px, black 50px, black 100px);
+	height: 100%;
+}
+
+body {
+	min-height: 100%;
+	background: slategray;
+	color: rgba(0,0,0,.6);
+	font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+	font-size: 110%;
+	text-align: center;
+}
+
+form {
+	width: 30em;
+	margin: auto;
+	padding: 1em 1.2em 1.2em;
+	background: rgba(0,0,0,.6);
+	background-image: -moz-linear-gradient(transparent, rgba(0,0,0,.5));
+	background-image: -ms-linear-gradient(transparent, rgba(0,0,0,.5));
+	background-image: -o-linear-gradient(transparent, rgba(0,0,0,.5));
+	background-image: -webkit-linear-gradient(transparent, rgba(0,0,0,.5));
+	background-image: linear-gradient(transparent, rgba(0,0,0,.5));
+	color: white;
+	font-size: 90%;
+	text-shadow: 1px 1px .3em rgba(0,0,0,.6);
+	border-radius: 1.5em;
+}
+
+input {
+	display: block;
+	width: 100%;
+	padding: .4em 0 .2em;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	font-family: Consolas, 'Andale Mono', 'Lucida Console', monospace;
+	font-weight: bold;
+	text-align: inherit;
+	outline: none;
+}
+
+input:focus {
+	box-shadow: 2px 2px 8px rgba(0,0,0,.7) inset;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+h1 {
+	overflow: hidden;
+	padding-top: .8em;
+	font-size: 340%;
+	line-height: .37;
+}
+
+span {
+	color: rgba(255,255,255,.5);
+	font-weight: normal;
+}
+
+label {
+	display: block;
+}
+
+	label span {
+		font-style: italic;
+	}
+
+	label input {
+		border: 8px solid rgba(0,0,0,.3);
+		background-clip: padding-box;
+		font-size: 210%;
+		border-radius: 15px;
+	}
+	
+	input.invalid {
+		border-color: rgba(200,0,0,.4);
+	}
+
+label + output {
+	display: block;
+	margin-top: .5em;	
+}
+
+	output > input {
+		background: transparent;
+		border: 0;
+		color: inherit;
+		font-size: 180%;
+		text-shadow: inherit;
+		border-radius: 10px;
+	}
+
+canvas {
+	display: none;
+}
+
+footer {
+	margin-top: .3em;
+	font-weight: bold;
+	color: rgba(0,0,0,.8);
+}
+
+.twitter-share-button {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+
+@media (max-width: 500px) {
+	body { font-size: 90%; }
+}
+
+@media (max-width: 400px) {
+	body { font-size: 80%; }
+}

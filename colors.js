@@ -11,59 +11,66 @@ var body = document.body,
 canvas.width = canvas.height = 16;
 body.appendChild(canvas);
 
-form.onsubmit = function(e) {
-	e && e.preventDefault();
-	
-	var color = input.value.trim(),
-		previous = body.style.backgroundColor;
-		
-	body.style.backgroundColor = '';
-	body.style.backgroundColor = color;
-	
-	if(!body.style.backgroundColor) {
-		body.style.backgroundColor = previous;
-		input.className = 'invalid';
-		return;
+// Simple class for handling sRGB colors
+function Color(rgba) {
+	if (rgba === 'transparent') {
+		rgba = [0,0,0,0];
 	}
-	
-	input.removeAttribute('class');
-	
-	ctx.fillStyle = color;
-	ctx.clearRect(0, 0, 16, 16);
-	ctx.fillRect(0, 0, 16, 16);
-	
-	// Get RGB
-	var rgb = [].slice.apply(ctx.getImageData(0, 0, 1, 1).data);
+	else if (typeof rgba === 'string') {
+		var rgbaString = rgba;
+		rgba = rgbaString.match(/rgba?\(([\d.]+), ([\d.]+), ([\d.]+)(?:, ([\d.]+))?\)/);
 		
-	if(rgb[3] === 255) {
-		rgb.length = 3;	
-	}
-
-	var hex = rgb.map(function(a) {
-		return (a < 16? '0' : '') + a.toString(16);
-	}).join('');
-	
-	if(rgb.length === 3) {
-		if(/(([\da-z])\2){3}/i.test(hex)) {
-			hex = hex.charAt(0) + hex.charAt(2) + hex.charAt(4);
+		if (rgba) {
+			rgba.shift();
+		}
+		else {
+			throw new Error('Invalid string: ' + rgbaString);
 		}
 	}
 	
-	out[1].value = '#' + hex;
-	
-	if(rgb.length > 3) {
-		rgb[3] = ('' + Math.round(rgb[3] / 2.55) / 100).replace('0.', '.');
+	if (rgba[3] === undefined) {
+		rgba[3] = 1;	
 	}
 	
-	out[0].value = 'rgb' + (rgb.length > 3? 'a' : '') + '(' + rgb.join(', ') + ')';
+	rgba = rgba.map(function (a) { return Math.round(a * 100)/100 });
 	
+	this.rgba = rgba;
+}
+
+Color.prototype = {
+	get rgb () {
+		return this.rgba.slice(0,3);
+	},
 	
-	// Now it's HSL's turn
-	if(color.indexOf('hsl') === 0) {
-		out[2].value = color.replace('0.', '.');
-	}
-	else {
-		rgb[0] /= 2.55; rgb[1] /= 2.55; rgb[2] /= 2.55;
+	get alpha () {
+		return this.rgba[3];
+	},
+	
+	set alpha (alpha) {
+		this.rgba[3] = alpha;
+	},
+	
+	get hex () {
+		var hex = this.rgb.map(function(a) {
+			return (a < 16? '0' : '') + a.toString(16);
+		}).join('')
+		
+		if(this.alpha >= 1) {
+			if(/(([\da-z])\2){3}/i.test(hex)) {
+				hex = hex.charAt(0) + hex.charAt(2) + hex.charAt(4);
+			}
+		}
+		else {
+			var alpha255 = Math.round(this.alpha * 255);
+			
+			hex += (alpha255 < 16? '0' : '') + alpha255.toString(16);
+		}
+		
+		return '#' + hex;
+	},
+	
+	get hsl () {
+		var rgb = this.rgb.map(function(a) { return a / 2.55 });
 		
 		var hsl = [],
 			max = Math.max.apply(Math, rgb),
@@ -83,19 +90,65 @@ form.onsubmit = function(e) {
 			}
 			
 			hsl[0] = Math.round(hsl[0]*60);
-			hsl[2] += '%';
 		}
 		else {
 			hsl[0] = 0;
 			hsl[1] = '0%';
 		}
 		
-		if(rgb.length > 3) {
-			hsl[3] = rgb[3];
-		}
+		hsl[2] += '%';
 		
-		out[2].value = 'hsl' + (hsl.length > 3? 'a' : '') + '(' + hsl.join(', ') + ')';
+		return hsl;
+	},
+	
+	toString: function() {
+		return 'rgb' + (this.alpha < 1? 'a' : '') + '(' + (this.rgba.slice(0, this.alpha >= 1? 3 : 4).join(', ') + ')').replace(/\b0\./, '.');
+	},
+	
+	toHSLString: function() {
+		var hsl = this.hsl;
+		
+		return 'hsl' + (this.alpha < 1? 'a' : '') + '(' + hsl.join(', ') + ((this.alpha < 1? ', ' + this.alpha : '') + ')').replace(/\b0\./, '.');
+	},
+	
+	clone: function() {
+		return new Color(this.rgba);
 	}
+}
+
+form.onsubmit = function(e) {
+	e && e.preventDefault();
+	
+	var oldColor = getComputedStyle(document.body).backgroundColor;
+	
+	document.body.style.background = '';
+	document.body.style.background = input.value;
+
+	var newColor = document.body.style.background;
+	
+	if (!newColor) {
+		// Invalid color
+		document.body.style.background = oldColor;
+		input.className = 'invalid';
+		
+		return;
+	}
+	
+	newColor = getComputedStyle(document.body).backgroundColor;
+	
+	input.removeAttribute('class');
+	
+	var color = new Color(newColor);
+	
+	out[1].value = color.hex;
+	
+	out[0].value = color + '';
+	
+	out[2].value = color.toHSLString();
+	
+	ctx.fillStyle = color;
+	ctx.clearRect(0, 0, 16, 16);
+	ctx.fillRect(0, 0, 16, 16);
 	
 	$('link[rel="shortcut icon"]').setAttribute('href', canvas.toDataURL());
 	document.title = color + ' ✿ CSS.coloratum';

@@ -146,7 +146,7 @@ form.onsubmit = function(e) {
 	
 	out[2].value = color.toHSLString();
 	
-	ctx.fillStyle = color;
+	ctx.fillStyle = color + '';
 	ctx.clearRect(0, 0, 16, 16);
 	ctx.fillRect(0, 0, 16, 16);
 	

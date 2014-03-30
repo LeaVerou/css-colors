@@ -1,4 +1,4 @@
-# [CSS.coloratum](http://css.coloratum.com)
+# [CSS colors](http://leaverou.github.io/css-colors)
 
 ## Purpose
 CSS.coloratum is a nifty little tool that helps you:

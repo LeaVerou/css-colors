@@ -19,5 +19,5 @@ CSS.coloratum is built with cutting edge open web technologies, so it only works
 ## Links
 
 * CSS Colors is one of my 2 entries to the 10K contest. If you like it, [vote for it](http://10k.aneventapart.com/Entry/Details/538)!
-* [My blog post about it](http://leaverou.me/2011/09/css-coloratum-convert-and-share-css-colors/)
+* [My blog post about it](http://lea.verou.me/2011/09/css-coloratum-convert-and-share-css-colors/)
 * It's released under an MIT-like License, like most of my stuff. In short, do whatever the eff you want with it, as long as you give me credit in some decent way.
